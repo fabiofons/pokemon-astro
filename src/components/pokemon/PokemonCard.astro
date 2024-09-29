@@ -17,7 +17,10 @@ const imageSrcReq: string = data.sprites.other?.['official-artwork'].front_defau
 
 ---
 
-<div class='rounded-lg border flex flex-col items-center justify-center'>
+<a
+  href=`/pokemon/${name}`
+  class='rounded-lg border flex flex-col items-center justify-center my-6'
+>
   <img 
     src={imageSrcReq} 
     alt={name} 
@@ -26,5 +29,5 @@ const imageSrcReq: string = data.sprites.other?.['official-artwork'].front_defau
     src={imageSrc} 
     alt={name} 
   /> -->
-  <span>{name}</span>
-</div>
+  <span class='capitalize text-lg'>{name}</span>
+</a>
