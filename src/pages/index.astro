@@ -1,4 +1,5 @@
 ---
+import PokemonCard from "../components/pokemon/PokemonCard.astro";
 import type { PokemonListResponse } from "../interfaces/pokemon-list.response";
 import MainLayout from "../layouts/MainLayout.astro";
 
@@ -14,9 +15,15 @@ console.log(data);
 	<h1 class='text-3xl'>
 		Pokémon List
 	</h1>
-	<ul>
+	<section aria-label="Pokemon List" class='grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 gap-4 mt-6'>
 		{
-			data.results.map((pokemon) => (<li>{pokemon.name}</li>))
+			data.results.map(({name, url}) => 
+				<PokemonCard 
+					name={name} 
+					url={url} 
+				/>
+			)
 		}
-	</ul>
+
+	</section>
 </MainLayout>
