@@ -2,24 +2,18 @@
 import type { GetStaticPaths } from "astro";
 import MainLayout from "../../layouts/MainLayout.astro";
 import PokemonCard from "../../components/pokemon/PokemonCard.astro";
+import type { PokemonListResponse } from "../../interfaces/pokemon-list.response";
 
-export const getStaticPaths = (() => {
-  
-  return [
-    {params: {
-      name: 'bulbasaur'}, 
-      props: {url: 'https://pokeapi.co/api/v2/pokemon/1/', name: 'bulbasaur'}
-    },
-    {params: {
-      name: 'charmander'}, 
-      props: {url: 'https://pokeapi.co/api/v2/pokemon/4/', name: 'charmander'}
-    },
-    {params: {
-      name: 'raticate'}, 
-      props: {url: 'https://pokeapi.co/api/v2/pokemon/20/', name: 'raticate'}
-    }
-  ];
-}) satisfies GetStaticPaths;
+export const getStaticPaths = (async () => {
+
+  const res = await fetch( 'https://pokeapi.co/api/v2/pokemon?limit=151' );
+  const { results } = await ( res.json() ) as PokemonListResponse;
+
+  return results.map(({name, url}) => ({
+    params: { name }, 
+    props: { name, url }
+  }));
+})
 
 const { name } = Astro.params;
 const { url } = Astro.props;
@@ -35,7 +29,7 @@ const audioSrc = `https://raw.githubusercontent.com/PokeAPI/cries/main/cries/pok
       </a>
       <h2 class='capitalize text-5xl'>{name}</h2>
     </div>
-    <PokemonCard name={name} url={url}/>
+    <PokemonCard name={name} url={url} isBig/>
     <audio controls>
       <source src={audioSrc} type='audio/ogg'/>
       Your browser does not support the audio element

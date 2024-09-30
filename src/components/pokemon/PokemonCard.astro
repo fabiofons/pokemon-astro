@@ -1,33 +1,45 @@
 ---
+import { isBlock } from 'typescript';
 import type { PokemonInfo } from '../../interfaces/pokemon-info.response'
 interface Props {
   name: string;
   url: string;
+  isBig?: boolean;
 }
 
-const {name, url} = Astro.props;
+const { name, url, isBig = false } = Astro.props;
 //Getting image from ID
-// const pokemonId = url.split('/').at(-2);
-// const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`
+const pokemonId = url.split('/').at(-2);
+const imageSrc = `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonId}.png`;
 
 //Getting image from fetch to pokemon details
-const resp = await fetch(url);
-const data = await (resp.json()) as PokemonInfo;
-const imageSrcReq: string = data.sprites.other?.['official-artwork'].front_default ?? '';
+// const resp = await fetch( url );
+// const data = await ( resp.json() ) as PokemonInfo;
+// const imageSrcReq: string = data.sprites.other?.['official-artwork'].front_default ?? '';
 
 ---
 
+<!-- class=`rounded-lg flex flex-col items-center justify-center my-6 ${!isBig && 'border'}` -->
 <a
   href=`/pokemon/${name}`
-  class='rounded-lg border flex flex-col items-center justify-center my-6'
+  class:list = {
+    ['rounded-lg flex flex-col items-center justify-center', 
+      {
+        border: !isBig,
+        'mb-8': isBig
+      }
+    ]
+  }
 >
   <img 
-    src={imageSrcReq} 
+    transition:name={`${name}-image`}
+    src={imageSrc} 
     alt={name} 
+    class=`${isBig ? 'w-26 h-26' : 'w-22 h-22'}`
   />
   <!-- <img 
     src={imageSrc} 
     alt={name} 
   /> -->
-  <span class='capitalize text-lg'>{name}</span>
+  <span class:list={['capitalize', {'text-4xl text-blue-300': isBig}]}>#{pokemonId} {name}</span>
 </a>
